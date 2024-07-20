@@ -17,7 +17,8 @@
         "esbenp.prettier-vscode",
         "GitHub.copilot",
         "esbenp.prettier-vscode",
-        "bradlc.vscode-tailwindcss"
+        "bradlc.vscode-tailwindcss",
+        "github.vscode-github-actions"
       ],
       "settings": {
         "go.formatTool": "gofmt",
