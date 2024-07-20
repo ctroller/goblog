@@ -10,13 +10,16 @@
         "ms-azuretools.vscode-docker",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "GitHub.copilot"
+        "GitHub.copilot",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss"
       ],
       "settings": {
         "go.formatTool": "gofmt",
         "[go]": {
           "editor.codeActionsOnSave": {
-            "source.organizeImports": "always"
+            "source.organizeImports": true,
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
           }
         },
         "editor.formatOnSave": true,

@@ -7,7 +7,8 @@ This project is a personal learning experience aimed at exploring new languages 
 - Backend Language: Go
 - Frontend Technologies: HTMX, TailwindCSS, AlpineJS
 - Data Storage: PostgreSQL
-- Deployment Technologies: Devcontainers, Docker, Kubernetes, Helm
+- Deployment Technologies: Docker, Kubernetes, Helm
+- Dev Services: Devcontainers, Github Actions, act
 
 ## Features
 

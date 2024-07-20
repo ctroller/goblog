@@ -1,0 +1,41 @@
+# Compiled binary executables
+/bin/
+/cmd/*/main
+
+# Dependency directories (vendor folder used by older dependency management tools)
+/vendor/
+
+# Object files, archives, etc.
+*.o
+*.a
+*.so
+*.dylib
+
+# Logs
+*.log
+
+# Output of the Go coverage tool
+*.out
+
+# IDE and editor folders
+/.vscode/
+/.idea/
+*.swp
+*~
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+
+# Private keys
+*.pem
+
+# Test binary, built with `go test -c`
+*.test
+
+# Directory for tooling like golangci-lint
+/.golangci/
