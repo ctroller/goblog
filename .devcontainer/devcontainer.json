@@ -3,6 +3,11 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "containerUser": "root",
+  "remoteUser": "root",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -24,7 +29,7 @@
         },
         "editor.formatOnSave": true,
         "terminal.integrated.shell.linux": "/bin/bash"
-      },
+      }
     }
   },
 

@@ -1,9 +1,7 @@
 FROM mcr.microsoft.com/devcontainers/go:1-1.22-bookworm
 
 # Set environment variables for Go
-ENV CGO_ENABLED=0 \
-    GOPATH=/home/vscode/go \
-    GOBIN=/home/vscode/go/bin
+ENV CGO_ENABLED=0
 
 # Update and install dependencies
 RUN apt-get update && apt-get upgrade -y && \
@@ -29,11 +27,6 @@ RUN go install golang.org/x/tools/gopls@latest && \
     go install github.com/golang/mock/mockgen@latest && \
     go install golang.org/x/tools/cmd/godoc@latest && \
     go install golang.org/x/perf/cmd/benchstat@latest
-
-RUN chown -R vscode:vscode /home/vscode/go
-
-# Switch to a non-root user - this needs to be down here so the above commands will be run as root
-USER vscode
 
 # Set the working directory
 WORKDIR /workspace
