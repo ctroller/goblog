@@ -1,0 +1,8 @@
+{{ define "title" }} My Blog {{ end }} {{ define "content" }} {{ range .Posts }}
+<article class="prose prose-slate">
+  <h2 class="my-1">{{ .Title }}</h2>
+  <p class="text-sm text-gray-500 my-1">{{ .CreatedAt.Format "2006-01-02" }}</p>
+  <p class="my-3 mb-0">{{ .Summary }}</p>
+  <a href="/posts/{{ .SeoURL }}" class="no-underline text-blue-500 hover:text-blue-700 hover:underline">Read more</a>
+</article>
+{{ end }} {{ end }}

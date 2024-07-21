@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"goblog/internal/block"
 	"goblog/internal/dto"
 	"goblog/internal/rest"
 	"net/http"
@@ -16,10 +17,13 @@ func NewPostService() PostService {
 
 var posts = []dto.Post{
 	{
-		ID:        1,
-		Title:     "Hello, World!",
-		SeoURL:    "hello-world",
-		Body:      "This is my first post.",
+		ID:      1,
+		Title:   "Hello, World!",
+		Summary: "A simple introduction to the world",
+		SeoURL:  "hello-world",
+		Body: []block.ContentBlock{
+			block.NewTextBlock("Hello, World!"),
+		},
 		CreatedAt: time.Now(),
 	},
 }
