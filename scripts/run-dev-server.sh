@@ -30,4 +30,4 @@ cat "$TEMP_FILE"
 echo ""
 
 # Start the Go server
-go run cmd/blog/server.go
+go run cmd/server.go

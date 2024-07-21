@@ -4,7 +4,7 @@ This project is a personal learning experience aimed at exploring new languages 
 
 ## Technologies
 
-- Backend Language: Go
+- Backend Language: Go (with Gorilla Mux)
 - Frontend Technologies: HTMX, TailwindCSS, AlpineJS
 - Data Storage: PostgreSQL
 - Deployment Technologies: Docker, Kubernetes, Helm
