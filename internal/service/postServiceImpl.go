@@ -4,9 +4,11 @@ import (
 	"errors"
 	"goblog/internal/block"
 	"goblog/internal/dto"
-	"goblog/internal/rest"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/schema"
+	"github.com/rs/zerolog/log"
 )
 
 type postServiceImpl struct{}
@@ -37,25 +39,26 @@ func (s *postServiceImpl) GetBySeoURL(seoURL string) (*dto.Post, error) {
 	return nil, nil
 }
 
-func (s *postServiceImpl) GetByFilter(filter Filter, page *int, perPage *int) (Posts, error) {
-	return Posts{
-		Posts:      posts,
-		Pagination: rest.Pagination{},
-	}, nil
+func (s *postServiceImpl) GetByFilter(filter Filter, page *int, perPage *int) ([]dto.Post, error) {
+	return posts, nil
 }
 
 func (s *postServiceImpl) GetCategories(max *int) ([]dto.Category, error) {
 	return nil, errors.New("not implemented")
 }
 
-func (s *postServiceImpl) GetTags(max *int) ([]dto.Tag, error) {
+func (s *postServiceImpl) GetDates(max *int) ([]Date, error) {
 	return nil, errors.New("not implemented")
 }
 
-func (s *postServiceImpl) GetArchives(max *int) ([]Archive, error) {
-	return nil, errors.New("not implemented")
-}
+func (s *postServiceImpl) GetFilterParams(request *http.Request) *Filter {
+	var decoder = schema.NewDecoder()
+	var filter *Filter
+	err := decoder.Decode(&filter, request.URL.Query())
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to decode filter params")
+		return nil
+	}
 
-func (s *postServiceImpl) GetFilterParams(request *http.Request) Filter {
-	return Filter{}
+	return filter
 }
