@@ -11,7 +11,7 @@ RUN curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/download/v3.4
     chmod +x tailwindcss-linux-x64 && \
     mv tailwindcss-linux-x64 /usr/local/bin/tailwindcss
 
-COPY ui/src/css /app/ui/src/css
+COPY ui /app
 COPY tailwind.config.js /app/tailwind.config.js
 RUN tailwindcss -i /app/ui/src/css/main.css -o /app/ui/static/css/tailwind.css --minify
 
@@ -19,7 +19,7 @@ RUN tailwindcss -i /app/ui/src/css/main.css -o /app/ui/static/css/tailwind.css -
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/blog /app/
-COPY --from=tailwind /app/ui/static /app/ui/static
+COPY --from=tailwind /app/ui/static/css/tailwind.css /app/ui/static/css/tailwind.css
 
 EXPOSE 8080
 
