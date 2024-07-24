@@ -1,4 +1,4 @@
-{{ define "title" }} My Blog {{ end }} {{ define "content" }} {{ range .Data }}
+{{ define "title" }} My Blog {{ end }} {{ define "content" }} {{ range . }}
 <article class="prose prose-slate">
   <h2 class="my-1">{{ .Title }}</h2>
   <p class="text-sm text-gray-500 my-1">{{ .CreatedAt.Format "2006-01-02" }}</p>
