@@ -1,7 +1,7 @@
 FROM golang:1.22.5-alpine3.20 AS builder
 WORKDIR /app
 COPY . .
-RUN go build -o blog cmd/blog/server.go
+RUN go build -o blog cmd/server.go
 
 # Build stage for TailwindCSS
 FROM alpine:3.20.2 AS tailwind
@@ -11,7 +11,7 @@ RUN curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/download/v3.4
     chmod +x tailwindcss-linux-x64 && \
     mv tailwindcss-linux-x64 /usr/local/bin/tailwindcss
 
-COPY ui /app
+COPY ui /app/ui
 COPY tailwind.config.js /app/tailwind.config.js
 RUN tailwindcss -i /app/ui/src/css/main.css -o /app/ui/static/css/tailwind.css --minify
 
