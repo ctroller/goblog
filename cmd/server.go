@@ -41,7 +41,7 @@ func RegisterRoutes(router *mux.Router, config config.BlogConfig) {
 
 	router.NotFoundHandler = handler.NotFoundHandler(config)
 	router.PathPrefix("/posts/").HandlerFunc(handler.PostDetailHandler(config))
-	router.PathPrefix("/").HandlerFunc(handler.RootHandler(config))
+	router.Path("/").HandlerFunc(handler.RootHandler(config))
 }
 
 var logLevelLookup = map[string]zerolog.Level{

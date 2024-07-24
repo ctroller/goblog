@@ -2,6 +2,7 @@ package handler
 
 import (
 	"goblog/internal/config"
+	"goblog/internal/nav"
 	"goblog/internal/service"
 	"net/http"
 
@@ -21,7 +22,12 @@ func RootHandler(config config.BlogConfig) http.HandlerFunc {
 			log.Fatal().Err(err).Msg("Failed to fetch posts")
 		}
 
-		response, err := renderHTML(w, "root", posts)
+		data := RenderData{
+			Data:       posts,
+			Breadcrumb: []nav.Breadcrumb{{Title: "Home", URL: "/"}},
+		}
+
+		response, err := renderHTML(w, "root", data)
 
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to render posts")

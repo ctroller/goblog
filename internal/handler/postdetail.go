@@ -2,6 +2,7 @@ package handler
 
 import (
 	"goblog/internal/config"
+	"goblog/internal/nav"
 	"net/http"
 	"strings"
 
@@ -25,7 +26,15 @@ func PostDetailHandler(config config.BlogConfig) http.HandlerFunc {
 			return
 		}
 
-		response, err := renderHTML(w, "post-detail", post)
+		data := RenderData{
+			Data: post,
+			Breadcrumb: []nav.Breadcrumb{
+				{Title: "Home", URL: "/"},
+				{Title: "Posts", URL: "/posts", Nolink: true},
+				{Title: post.Title, URL: "/posts/" + post.SeoURL},
+			}}
+
+		response, err := renderHTML(w, "post-detail", data)
 		if err != nil {
 			log.Error().Err(err).Any("post", post).Msg("Failed to render the post.")
 			http.Error(w, "Failed to render post.", http.StatusInternalServerError)
