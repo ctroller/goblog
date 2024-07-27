@@ -7,7 +7,7 @@ RUN go build -o blog cmd/server.go
 FROM alpine:3.20.2 AS tailwind
 WORKDIR /app
 RUN apk add --no-cache curl
-RUN curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/download/v3.4.6/tailwindcss-linux-x64 && \
+RUN curl --proto '=https' --tlsv1.2 -sLO https://github.com/tailwindlabs/tailwindcss/releases/download/v3.4.6/tailwindcss-linux-x64 && \
     chmod +x tailwindcss-linux-x64 && \
     mv tailwindcss-linux-x64 /usr/local/bin/tailwindcss
 
@@ -20,6 +20,8 @@ FROM alpine:3.20.2
 WORKDIR /app
 COPY --from=builder /app/blog /app/
 COPY --from=tailwind /app/ui/static/css/tailwind.css /app/ui/static/css/tailwind.css
+
+USER goblog
 
 EXPOSE 8080
 
