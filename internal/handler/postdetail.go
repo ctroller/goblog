@@ -3,6 +3,7 @@ package handler
 import (
 	"goblog/internal/config"
 	"goblog/internal/nav"
+	"goblog/internal/render"
 	"net/http"
 	"strings"
 
@@ -26,15 +27,30 @@ func PostDetailHandler(config config.BlogConfig) http.HandlerFunc {
 			return
 		}
 
-		data := RenderData{
+		var dynamicScripts = new([]render.DynamicScript)
+		var dynamicCSS = new([]render.DynamicCSS)
+		for _, block := range post.Body {
+			if block.DynamicScripts() != nil {
+				*dynamicScripts = append(*dynamicScripts, *block.DynamicScripts()...)
+			}
+
+			if block.DynamicCSS() != nil {
+				*dynamicCSS = append(*dynamicCSS, *block.DynamicCSS()...)
+			}
+		}
+
+		data := render.RenderData{
 			Data: post,
 			Breadcrumb: []nav.Breadcrumb{
 				{Title: "Home", URL: "/"},
 				{Title: "Posts", URL: "/posts", Nolink: true},
 				{Title: post.Title, URL: "/posts/" + post.SeoURL},
-			}}
+			},
+			DynamicScripts: dynamicScripts,
+			DynamicCSS:     dynamicCSS,
+		}
 
-		response, err := renderHTML(w, "post-detail", data)
+		response, err := render.RenderHTML(w, "post-detail", data)
 		if err != nil {
 			log.Error().Err(err).Any("post", post).Msg("Failed to render the post.")
 			http.Error(w, "Failed to render post.", http.StatusInternalServerError)

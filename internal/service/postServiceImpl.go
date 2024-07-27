@@ -25,6 +25,20 @@ var posts = []dto.Post{
 		SeoURL:  "hello-world",
 		Body: []block.ContentBlock{
 			block.NewTextBlock("Hello, World!"),
+			block.NewCodeBlock(`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Hello, World!")
+}`, "go"),
+			block.NewCodeBlock(`import java.util.*;
+
+public class Main {
+		public static void main(String... args) {
+			System.out.println("Hello, World!                                      LOOOOOOOOOOOOOOOOOOOONG");
+		}
+}`, "java"),
 		},
 		CreatedAt: time.Now(),
 	},

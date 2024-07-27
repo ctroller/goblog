@@ -7,7 +7,7 @@ import (
 )
 
 func RenderTemplate(templateName string, block ContentBlock) (template.HTML, error) {
-	tmpl, err := template.ParseFiles(filepath.Join("ui", "templates", "blocks", templateName+".html"))
+	tmpl, err := template.ParseFiles(filepath.Join("ui", "templates", "blocks", templateName+".tmpl"))
 	if err != nil {
 		return "", err
 	}

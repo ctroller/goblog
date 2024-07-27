@@ -20,21 +20,6 @@
         "bradlc.vscode-tailwindcss",
         "github.vscode-github-actions"
       ],
-      "settings": {
-        "files.associations": {
-          "*.css": "tailwindcss"
-        },
-        "css.lint.unknownAtRules": "ignore",
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "go.formatTool": "gofmt",
-        "[go]": {
-          "editor.codeActionsOnSave": {
-            "source.organizeImports": true
-          }
-        },
-        "editor.formatOnSave": true,
-        "terminal.integrated.shell.linux": "/bin/bash"
-      }
     }
   },
 
