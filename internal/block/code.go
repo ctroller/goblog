@@ -63,7 +63,6 @@ func (b CodeBlock) DynamicScripts() *[]render.DynamicScript {
 func (b CodeBlock) DynamicCSS() *[]render.DynamicCSS {
 	return &[]render.DynamicCSS{
 		{Link: hJSCSSLink},
-		{Link: "https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"},
 	}
 }
 
