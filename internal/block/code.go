@@ -5,12 +5,11 @@ import (
 	"html/template"
 )
 
-const hJSVersion = "11.10.0"
-
 var supportedHJSLanguages = []string{
 	"bash", "css", "dockerfile", "go", "http", "ini", "java", "javascript", "json", "kotlin", "lua", "markdown", "nginx", "nginx", "pgsql", "protobuf", "python", "scss", "sql", "typescript", "xml", "yaml",
 }
 
+const hJSVersion = "11.10.0"
 const hJSCDNLink = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/" + hJSVersion
 const hJSCDNLinkPrefix = hJSCDNLink + "/languages/"
 const hJSCSSLink = hJSCDNLink + "/styles/base16/gruvbox-dark-soft.min.css"
@@ -23,32 +22,26 @@ var supportedHJSLanguagesWithPrefix = func() []string {
 	return prefixedLanguages
 }()
 
+func createDynamicScript(link string, async bool, footer bool, content template.JS, uniqueId string) render.DynamicScript {
+	return render.DynamicScript{
+		Link:     link,
+		Async:    async,
+		Footer:   footer,
+		Content:  content,
+		UniqueId: uniqueId,
+	}
+}
+
 var dynamicScripts = func() *[]render.DynamicScript {
 	var scripts []render.DynamicScript
-	scripts = append(scripts, render.DynamicScript{
-		Link: hJSCDNLink + "/highlight.min.js", Async: false, Footer: true,
-	})
 
+	scripts = append(scripts, createDynamicScript(hJSCDNLink+"/highlight.min.js", false, true, "", ""))
 	for _, lang := range supportedHJSLanguagesWithPrefix {
-		scripts = append(scripts, render.DynamicScript{
-			Link:   lang,
-			Async:  true,
-			Footer: true,
-		})
+		scripts = append(scripts, createDynamicScript(lang, true, true, "", ""))
 	}
 
-	scripts = append(scripts, render.DynamicScript{
-		Link: "/static/js/hljs-copy.js",
-		Async: true,
-		Footer: true,
-	})
-
-	scripts = append(scripts, render.DynamicScript{
-		Content: `hljs.highlightAll();`,
-		Async:   true,
-		Footer:  true,
-		UniqueId: "highlightjs-init",
-	})
+	scripts = append(scripts, createDynamicScript("/static/js/hljs-copy.js", true, true, "", ""))
+	scripts = append(scripts, createDynamicScript("", true, true, `hljs.highlightAll();`, "highlightjs-init"))
 
 	return &scripts
 }

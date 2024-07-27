@@ -8,11 +8,11 @@ import (
 )
 
 type DynamicScript struct {
-	Link    string
-	Content template.JS
-	Async   bool
-	Footer  bool
-	UniqueId  string
+	Link     string
+	Content  template.JS
+	Async    bool
+	Footer   bool
+	UniqueId string
 }
 
 type DynamicCSS struct {
@@ -53,54 +53,58 @@ func RenderHTML(w http.ResponseWriter, templateName string, data RenderData) ([]
 }
 
 func toTemplateData(data RenderData) TemplateRenderData {
-	uniqueCSSLinks := make(map[string]bool)
-	uniqueScriptLinks := make(map[string]bool)
-	uniqueScripts := make(map[string]bool)
-
-	var templateData = TemplateRenderData{
+	templateData := TemplateRenderData{
 		Data:       data.Data,
 		Breadcrumb: data.Breadcrumb,
 	}
 
 	if data.DynamicCSS != nil {
-		var uniqueCSS []DynamicCSS
-		for _, css := range *data.DynamicCSS {
-			if !uniqueCSSLinks[css.Link] {
-				uniqueCSSLinks[css.Link] = true
-				uniqueCSS = append(uniqueCSS, css)
-			}
-		}
-		templateData.DynamicCSS = &uniqueCSS
+		templateData.DynamicCSS = getUniqueCSS(*data.DynamicCSS)
 	}
 
 	if data.DynamicScripts != nil {
-		var headerScripts []DynamicScript
-		var footerScripts []DynamicScript
-		for _, script := range *data.DynamicScripts {
-			if script.Link != "" {
-				if !uniqueScriptLinks[script.Link] {
-					uniqueScriptLinks[script.Link] = true
-
-					appendScript(&headerScripts, &footerScripts, script)
-				}
-			} else {
-				if script.UniqueId == "" || !uniqueScripts[script.UniqueId] {
-					uniqueScripts[script.UniqueId] = true
-					appendScript(&headerScripts, &footerScripts, script)
-				}
-			}
-		}
-		templateData.DynamicHeadScripts = &headerScripts
-		templateData.DynamicBodyScripts = &footerScripts
+		templateData.DynamicHeadScripts = getUniqueScripts(*data.DynamicScripts, false)
+		templateData.DynamicBodyScripts = getUniqueScripts(*data.DynamicScripts, true)
 	}
 
 	return templateData
 }
 
-func appendScript(headerScripts *[]DynamicScript, footerScripts *[]DynamicScript, script DynamicScript) {
-	if script.Footer {
-		*footerScripts = append(*footerScripts, script)
-	} else {
-		*headerScripts = append(*headerScripts, script)
+func getUniqueCSS(dynamicCSS []DynamicCSS) *[]DynamicCSS {
+	uniqueCSSLinks := make(map[string]bool)
+	var uniqueCSS []DynamicCSS
+
+	for _, css := range dynamicCSS {
+		if !uniqueCSSLinks[css.Link] {
+			uniqueCSSLinks[css.Link] = true
+			uniqueCSS = append(uniqueCSS, css)
+		}
 	}
+
+	return &uniqueCSS
+}
+
+func getUniqueScripts(dynamicScripts []DynamicScript, footer bool) *[]DynamicScript {
+	uniqueScriptLinks := make(map[string]bool)
+	uniqueScripts := make(map[string]bool)
+	var scripts []DynamicScript
+
+	for _, script := range dynamicScripts {
+		if script.Footer != footer {
+			continue
+		}
+		if script.Link != "" {
+			if !uniqueScriptLinks[script.Link] {
+				uniqueScriptLinks[script.Link] = true
+				scripts = append(scripts, script)
+			}
+		} else {
+			if script.UniqueId == "" || !uniqueScripts[script.UniqueId] {
+				uniqueScripts[script.UniqueId] = true
+				scripts = append(scripts, script)
+			}
+		}
+	}
+
+	return &scripts
 }
