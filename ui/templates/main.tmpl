@@ -11,13 +11,13 @@
     ></script>
     <script src="https://unpkg.com/htmx.org@2.0.1"></script>
 
-    {{ if and (.DynamicCSS) (gt (len .DynamicCSS) 0) }}
-      {{ range .DynamicCSS }}
+    {{ if and (.CSSFiles) (gt (len .CSSFiles) 0) }}
+      {{ range .CSSFiles }}
         <link rel="stylesheet" href="{{ .Link }}" />
       {{ end }}
     {{ end }}
-    {{ if and (.DynamicHeadScripts) (gt (len .DynamicHeadScripts) 0) }}
-      {{ range .DynamicHeadScripts }}
+    {{ if and (.HeaderJSScripts) (gt (len .HeaderJSScripts) 0) }}
+      {{ range .HeaderJSScripts }}
         <script src="{{ .Link }}"></script>
       {{ end }}
     {{ end }}
@@ -36,8 +36,8 @@
         {{ template "content" .Data }}
       </main>
     </div>
-    {{ if and (.DynamicBodyScripts) (gt (len .DynamicBodyScripts) 0) }}
-      {{ range .DynamicBodyScripts }}
+    {{ if and (.BodyJSScripts) (gt (len .BodyJSScripts) 0) }}
+      {{ range .BodyJSScripts }}
     <script{{ if .Link }} src="{{ .Link }}"{{end}}{{ if .Async }} defer="true"{{end}}>{{ if .Content }}{{ .Content }}{{ end }}</script>
       {{ end }}
     {{ end }}

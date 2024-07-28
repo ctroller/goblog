@@ -3,35 +3,24 @@ package render
 import (
 	"bytes"
 	"goblog/internal/nav"
+	"goblog/internal/types"
 	"html/template"
 	"net/http"
 )
 
-type DynamicScript struct {
-	Link     string
-	Content  template.JS
-	Async    bool
-	Footer   bool
-	UniqueId string
-}
-
-type DynamicCSS struct {
-	Link string
-}
-
 type RenderData struct {
-	Data           any
-	Breadcrumb     []nav.Breadcrumb
-	DynamicScripts *[]DynamicScript
-	DynamicCSS     *[]DynamicCSS
+	Data       any
+	Breadcrumb []nav.Breadcrumb
+	JSScripts  *[]types.JSScript
+	CSSFiles   *[]types.CSSFile
 }
 
 type TemplateRenderData struct {
-	Data               any
-	Breadcrumb         []nav.Breadcrumb
-	DynamicHeadScripts *[]DynamicScript
-	DynamicBodyScripts *[]DynamicScript
-	DynamicCSS         *[]DynamicCSS
+	Data            any
+	Breadcrumb      []nav.Breadcrumb
+	HeaderJSScripts *[]types.JSScript
+	BodyJSScripts   *[]types.JSScript
+	CSSFiles        *[]types.CSSFile
 }
 
 // renders given template (within the ui/templates directory) with the provided data.
@@ -63,21 +52,21 @@ func toTemplateData(data RenderData) TemplateRenderData {
 		Breadcrumb: data.Breadcrumb,
 	}
 
-	if data.DynamicCSS != nil {
-		templateData.DynamicCSS = getUniqueCSS(*data.DynamicCSS)
+	if data.CSSFiles != nil {
+		templateData.CSSFiles = getUniqueCSS(*data.CSSFiles)
 	}
 
-	if data.DynamicScripts != nil {
-		templateData.DynamicHeadScripts = getUniqueScripts(*data.DynamicScripts, false)
-		templateData.DynamicBodyScripts = getUniqueScripts(*data.DynamicScripts, true)
+	if data.JSScripts != nil {
+		templateData.HeaderJSScripts = getUniqueScripts(*data.JSScripts, false)
+		templateData.BodyJSScripts = getUniqueScripts(*data.JSScripts, true)
 	}
 
 	return templateData
 }
 
-func getUniqueCSS(dynamicCSS []DynamicCSS) *[]DynamicCSS {
+func getUniqueCSS(dynamicCSS []types.CSSFile) *[]types.CSSFile {
 	uniqueCSSLinks := make(map[string]bool)
-	var uniqueCSS []DynamicCSS
+	var uniqueCSS []types.CSSFile
 
 	for _, css := range dynamicCSS {
 		if !uniqueCSSLinks[css.Link] {
@@ -89,10 +78,10 @@ func getUniqueCSS(dynamicCSS []DynamicCSS) *[]DynamicCSS {
 	return &uniqueCSS
 }
 
-func getUniqueScripts(dynamicScripts []DynamicScript, footer bool) *[]DynamicScript {
+func getUniqueScripts(dynamicScripts []types.JSScript, footer bool) *[]types.JSScript {
 	uniqueScriptLinks := make(map[string]bool)
 	uniqueScripts := make(map[string]bool)
-	var scripts []DynamicScript
+	var scripts []types.JSScript
 
 	for _, script := range dynamicScripts {
 		if script.Footer != footer {

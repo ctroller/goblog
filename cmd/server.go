@@ -20,8 +20,16 @@ func main() {
 
 	config := config.BlogConfig{
 		PostService: service.NewPostService(),
+		PostCacheConfig: config.PostCacheConfig{
+			CacheDir: "cache/posts",
+		},
 	}
 
+	err := config.Validate()
+	if err != nil {
+		log.Fatal().Err(err).Msg("Invalid configuration.")
+	}
+	
 	configure()
 	cache.CacheAllPosts(config)
 	RegisterRoutes(router, config)
@@ -47,7 +55,6 @@ func RegisterRoutes(router *mux.Router, config config.BlogConfig) {
 	// Post cache
 	router.PathPrefix("/posts").Handler(http.StripPrefix("/posts/", Static404Handler(http.Dir("cache/posts"), router)))
 
-	//router.PathPrefix("/posts/").HandlerFunc(handler.PostDetailHandler(config))
 	router.Path("/").HandlerFunc(handler.RootHandler(config))
 }
 

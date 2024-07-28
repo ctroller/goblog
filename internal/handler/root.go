@@ -12,7 +12,7 @@ import (
 
 func RootHandler(config config.BlogConfig) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		filter := service.Filter{
+		filter := service.PostFilter{
 			Num: new(int),
 		}
 

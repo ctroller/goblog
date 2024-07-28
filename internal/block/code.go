@@ -1,7 +1,7 @@
 package block
 
 import (
-	"goblog/internal/render"
+	"goblog/internal/types"
 	"html/template"
 )
 
@@ -22,8 +22,8 @@ var supportedHJSLanguagesWithPrefix = func() []string {
 	return prefixedLanguages
 }()
 
-func createDynamicScript(link string, async bool, footer bool, content template.JS, uniqueId string) render.DynamicScript {
-	return render.DynamicScript{
+func createDynamicScript(link string, async bool, footer bool, content template.JS, uniqueId string) types.JSScript {
+	return types.JSScript{
 		Link:     link,
 		Async:    async,
 		Footer:   footer,
@@ -32,8 +32,8 @@ func createDynamicScript(link string, async bool, footer bool, content template.
 	}
 }
 
-var dynamicScripts = func() *[]render.DynamicScript {
-	var scripts []render.DynamicScript
+var dynamicScripts = func() *[]types.JSScript {
+	var scripts []types.JSScript
 
 	scripts = append(scripts, createDynamicScript(hJSCDNLink+"/highlight.min.js", false, true, "", ""))
 	for _, lang := range supportedHJSLanguagesWithPrefix {
@@ -56,12 +56,12 @@ func (b CodeBlock) Render() (template.HTML, error) {
 	return RenderTemplate("Code", b)
 }
 
-func (b CodeBlock) DynamicScripts() *[]render.DynamicScript {
+func (b CodeBlock) JSScripts() *[]types.JSScript {
 	return dynamicScripts()
 }
 
-func (b CodeBlock) DynamicCSS() *[]render.DynamicCSS {
-	return &[]render.DynamicCSS{
+func (b CodeBlock) CSSFiles() *[]types.CSSFile {
+	return &[]types.CSSFile{
 		{Link: hJSCSSLink},
 	}
 }

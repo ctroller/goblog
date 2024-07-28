@@ -1,14 +1,14 @@
 package block
 
 import (
-	"goblog/internal/render"
+	"goblog/internal/types"
 	"html/template"
 )
 
 type ContentBlock interface {
 	Render() (template.HTML, error)
-	DynamicScripts() *[]render.DynamicScript
-	DynamicCSS() *[]render.DynamicCSS
+	JSScripts() *[]types.JSScript
+	CSSFiles() *[]types.CSSFile
 }
 
 type DefaultBlock struct {
@@ -17,10 +17,10 @@ type DefaultBlock struct {
 	Name string
 }
 
-func (b DefaultBlock) DynamicScripts() *[]render.DynamicScript {
+func (b DefaultBlock) JSScripts() *[]types.JSScript {
 	return nil
 }
 
-func (b DefaultBlock) DynamicCSS() *[]render.DynamicCSS {
+func (b DefaultBlock) CSSFiles() *[]types.CSSFile {
 	return nil
 }

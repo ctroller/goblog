@@ -3,14 +3,12 @@ package cache
 import (
 	"goblog/internal/config"
 	"goblog/internal/dto"
-	"goblog/internal/handler"
+	"goblog/internal/render"
 	"os"
 	"path/filepath"
 
 	"github.com/rs/zerolog/log"
 )
-
-const cacheDir = "cache/posts"
 
 func CacheAllPosts(config config.BlogConfig) {
 	posts, err := config.PostService.GetAll()
@@ -20,20 +18,25 @@ func CacheAllPosts(config config.BlogConfig) {
 	}
 
 	for _, post := range posts {
-		CachePost(&post)
+		CachePost(&post, config.PostCacheConfig)
 	}
 }
 
-func getCacheFilePath(post *dto.Post) string {
-	return filepath.Join(cacheDir, post.SeoURL)
+func getPostCacheFilePath(post *dto.Post, config config.PostCacheConfig) string {
+	return filepath.Join(config.CacheDir, post.SeoURL)
 }
 
-func CachePost(post *dto.Post) error {
-	cacheFile := getCacheFilePath(post)
-	data, err := handler.RenderPost(post)
+func CachePost(post *dto.Post, config config.PostCacheConfig) {
+	log.Info().Any("config", config).Msg("Caching post.")
+	cacheFile := getPostCacheFilePath(post, config)
+	data, err := render.RenderPost(post)
 	if err != nil {
-		return err
+		log.Error().Err(err).Int("id", post.ID).Msg("Failed to render post.")
 	}
 
-	return os.WriteFile(cacheFile, data, 0644)
+	err = os.WriteFile(cacheFile, data, 0644)
+	
+	if err != nil {
+		log.Error().Err(err).Int("id", post.ID).Msg("Failed to save post.")
+	}
 }

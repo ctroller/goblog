@@ -19,7 +19,7 @@
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
         "github.vscode-github-actions"
-      ],
+      ]
     }
   },
 

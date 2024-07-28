@@ -11,7 +11,7 @@ type Post struct {
 	Title      string               `json:"title"`
 	Summary    string               `json:"summary"`
 	SeoURL     string               `json:"seo_url"`
-	Body       []block.ContentBlock `json:"body"`
+	Blocks     []block.ContentBlock `json:"blocks"`
 	CreatedAt  time.Time            `json:"created_at"`
 	UpdatedAt  *time.Time           `json:"updated_at,omitempty"`
 	Tags       []Tag                `json:"tags"`
