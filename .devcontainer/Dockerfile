@@ -1,6 +1,5 @@
-# Stage 1: Node setup for Prettier
+# Stage 1: Node for prettier in VSCode
 FROM node:22-bookworm AS node
-RUN npm install -g prettier prettier-plugin-go-template
 
 # Stage 2: Install Tailwind
 FROM debian:bookworm-slim AS tailwind
@@ -28,8 +27,7 @@ RUN go install golang.org/x/tools/gopls@latest && \
 FROM mcr.microsoft.com/devcontainers/go:1-1.22-bookworm AS main
 
 # Copy Prettier from node stage
-COPY --from=node /usr/local/bin/prettier /usr/local/bin/prettier
-COPY --from=node /usr/local/lib/node_modules/prettier-plugin-go-template /usr/local/lib/node_modules/prettier-plugin-go-template
+COPY --from=node /usr/local /usr/local
 
 # Copy Tailwind from tailwind stage
 COPY --from=tailwind /tailwindcss-linux-x64 /usr/local/bin/tailwindcss
@@ -52,6 +50,10 @@ RUN apt-get update && apt-get upgrade -y && \
 
 # Set the working directory
 WORKDIR /workspace
+
+# Make prettier work in vscode with go templates. Absolute disgusting hackfix, but alas
+# https://discourse.gohugo.io/t/formatter-for-go-templates/38403
+RUN npm install -g prettier prettier-plugin-go-template
 
 USER vscode
 
