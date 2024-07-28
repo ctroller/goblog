@@ -53,5 +53,7 @@ RUN apt-get update && apt-get upgrade -y && \
 # Set the working directory
 WORKDIR /workspace
 
+USER vscode
+
 # Keep the container running
 CMD ["sleep", "infinity"]

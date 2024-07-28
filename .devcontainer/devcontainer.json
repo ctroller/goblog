@@ -3,11 +3,11 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  "containerUser": "root",
-  "remoteUser": "${localEnv:USER}",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
+  "containerUser": "vscode",
+  "remoteUser": "vscode",
   "customizations": {
     "vscode": {
       "extensions": [
