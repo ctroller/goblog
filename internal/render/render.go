@@ -20,14 +20,14 @@ type DynamicCSS struct {
 }
 
 type RenderData struct {
-	Data           interface{}
+	Data           any
 	Breadcrumb     []nav.Breadcrumb
 	DynamicScripts *[]DynamicScript
 	DynamicCSS     *[]DynamicCSS
 }
 
 type TemplateRenderData struct {
-	Data               interface{}
+	Data               any
 	Breadcrumb         []nav.Breadcrumb
 	DynamicHeadScripts *[]DynamicScript
 	DynamicBodyScripts *[]DynamicScript
@@ -37,6 +37,13 @@ type TemplateRenderData struct {
 // renders given template (within the ui/templates directory) with the provided data.
 // the renderer will convert the given data to a struct with a Data field (containing the provided data) and a Referrer field (containing the http referrer if provided).
 func RenderHTML(w http.ResponseWriter, templateName string, data RenderData) ([]byte, error) {
+	out, err := RenderTemplate(templateName, data)
+	w.Header().Set("Content-Type", "text/html")
+
+	return out, err
+}
+
+func RenderTemplate(templateName string, data RenderData) ([]byte, error) {
 	tmpl, err := template.ParseFiles("ui/templates/main.tmpl", "ui/templates/nav/breadcrumb.tmpl", "ui/templates/"+templateName+".tmpl")
 	if err != nil {
 		return nil, err
@@ -46,8 +53,6 @@ func RenderHTML(w http.ResponseWriter, templateName string, data RenderData) ([]
 	if err := tmpl.Execute(&out, toTemplateData(data)); err != nil {
 		return nil, err
 	}
-
-	w.Header().Set("Content-Type", "text/html")
 
 	return out.Bytes(), nil
 }

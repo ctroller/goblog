@@ -39,3 +39,6 @@ Thumbs.db
 
 # Directory for tooling like golangci-lint
 /.golangci/
+
+# Binaries
+blog

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"goblog/internal/config"
+	"goblog/internal/dto"
 	"goblog/internal/nav"
 	"goblog/internal/render"
 	"net/http"
@@ -27,37 +28,42 @@ func PostDetailHandler(config config.BlogConfig) http.HandlerFunc {
 			return
 		}
 
-		var dynamicScripts = new([]render.DynamicScript)
-		var dynamicCSS = new([]render.DynamicCSS)
-		for _, block := range post.Body {
-			if block.DynamicScripts() != nil {
-				*dynamicScripts = append(*dynamicScripts, *block.DynamicScripts()...)
-			}
-
-			if block.DynamicCSS() != nil {
-				*dynamicCSS = append(*dynamicCSS, *block.DynamicCSS()...)
-			}
-		}
-
-		data := render.RenderData{
-			Data: post,
-			Breadcrumb: []nav.Breadcrumb{
-				{Title: "Home", URL: "/"},
-				{Title: "Posts", URL: "/posts", Nolink: true},
-				{Title: post.Title, URL: "/posts/" + post.SeoURL},
-			},
-			DynamicScripts: dynamicScripts,
-			DynamicCSS:     dynamicCSS,
-		}
-
-		response, err := render.RenderHTML(w, "post-detail", data)
+		response, err := RenderPost(post)
 		if err != nil {
 			log.Error().Err(err).Any("post", post).Msg("Failed to render the post.")
 			http.Error(w, "Failed to render post.", http.StatusInternalServerError)
 			return
 		}
 
+		w.Header().Set("Content-Type", "text/html")
 		w.WriteHeader(http.StatusOK)
 		w.Write(response)
 	}
+}
+
+func RenderPost(post *dto.Post) ([]byte, error) {
+	var dynamicScripts = new([]render.DynamicScript)
+	var dynamicCSS = new([]render.DynamicCSS)
+	for _, block := range post.Body {
+		if block.DynamicScripts() != nil {
+			*dynamicScripts = append(*dynamicScripts, *block.DynamicScripts()...)
+		}
+
+		if block.DynamicCSS() != nil {
+			*dynamicCSS = append(*dynamicCSS, *block.DynamicCSS()...)
+		}
+	}
+
+	data := render.RenderData{
+		Data: post,
+		Breadcrumb: []nav.Breadcrumb{
+			{Title: "Home", URL: "/"},
+			{Title: "Posts", URL: "/posts", Nolink: true},
+			{Title: post.Title, URL: "/posts/" + post.SeoURL},
+		},
+		DynamicScripts: dynamicScripts,
+		DynamicCSS:     dynamicCSS,
+	}
+
+	return render.RenderTemplate("post-detail", data)
 }

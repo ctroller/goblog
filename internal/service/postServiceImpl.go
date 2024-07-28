@@ -76,3 +76,7 @@ func (s *postServiceImpl) GetFilterParams(request *http.Request) *Filter {
 
 	return filter
 }
+
+func (s *postServiceImpl) GetAll() ([]dto.Post, error) {
+	return posts, nil
+}

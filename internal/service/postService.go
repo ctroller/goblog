@@ -21,6 +21,8 @@ type Filter struct {
 
 // PostService defines the interface for services that manage blog posts. It includes methods for retrieving posts by SEO URL, filtering posts, and getting categories, tags, and archives.
 type PostService interface {
+	GetAll() ([]dto.Post, error)
+
 	// GetBySeoURL retrieves a single post by its SEO-friendly URL.
 	GetBySeoURL(seoURL string) (*dto.Post, error)
 
